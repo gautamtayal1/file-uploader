@@ -1,14 +1,16 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from '../utils/constants'
+import { useNavigate } from 'react-router'
 
 const Homepage = () => {
 
   const [folders, setFolders] = useState([])
   const [input, setInput] = useState("")
   const [file, setFile] = useState("")
-  const [folderId, setFolderId] = useState(null)
-
+  const [folderId, setFolderId] = useState("")
+  const navigate = useNavigate()
+  
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0])
@@ -46,7 +48,7 @@ const Homepage = () => {
       console.log(err)
     }
   }
-  const handleFileSubmit = async (e) => {
+  const handleFileSubmit = async () => {
     try{
       if (!file) {
         console.log("No file selected")
@@ -54,7 +56,7 @@ const Homepage = () => {
       }
       const formData = new FormData()
       formData.append("file", file);
-      formData.append("folderId", folderId);
+      formData.append("folder_id", Number(folderId));
 
       const res = await axios.post(BASE_URL + "file/add", formData,
         {
@@ -82,8 +84,9 @@ const Homepage = () => {
         {folders.map((folder) => (
           <div 
           className='bg-white h-12 w-[40vw] rounded text-black text-2xl p-2 btn flex justify-between px-3'
-          key={folder.id}>
-            <button>{folder.name}</button>
+          key={folder.id}
+          >
+            <button onClick= {() => navigate(`/folder/${folder.id}`)}>{folder.name}</button>
             <button className='btn'
             onClick={() => handleDelete(folder.id)}>❌</button>
           </div> 
@@ -94,12 +97,11 @@ const Homepage = () => {
       <div className="right w-[50vw] bg-white h-[100vh] flex justify-center pt-40">
       <div className="card card-border bg-base-100 w-96 h-[30vh]">
         <div className="card-body">
-        <select defaultValue="Pick a color" 
+        <select value={folderId} 
         className="select"
         onChange={(e) => setFolderId(e.target.value)}>
 
-          <option disabled={true}
-          value={folderId}
+          <option value="" disabled
           >Choose Folder</option>
           {folders.map((folder) => (
             <option value={folder.id} key={folder.id}>{folder.name}</option>

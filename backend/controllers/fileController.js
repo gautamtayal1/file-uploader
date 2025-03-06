@@ -8,7 +8,7 @@ const getFiles = async(req, res) => {
     const files = await prisma.file.findMany({
       where:{folder_id : Number(folderId)}
     })
-    res.json({files})
+    res.json(files)
   }
   catch (err) {
     res.status(500).json({
@@ -18,16 +18,16 @@ const getFiles = async(req, res) => {
 } 
 
 const addFiles = async (req, res) => {
-  try{
-    if(!req.file){
-      return res.status(400).json({message: "no file uploaded"})
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "no file uploaded" });
     }
-    const {originalname, path, size} = req.file
-    const {folder_id} = req.file
+    const { originalname, path, size } = req.file;
+    const { folder_id } = req.body;
 
-    const cloudinaryResponse = await uploadOnCloudinary(path)
-    if(!cloudinaryResponse) {
-      return res.status(500).json({message:"cloudinary upload failed"})
+    const cloudinaryResponse = await uploadOnCloudinary(path);
+    if (!cloudinaryResponse) {
+      return res.status(500).json({ message: "cloudinary upload failed" });
     }
 
     const newFile = await prisma.file.create({
@@ -35,15 +35,14 @@ const addFiles = async (req, res) => {
         name: originalname,
         size: size.toString(),
         folder_id: parseInt(folder_id),
-        file_url: cloudinaryResponse.secure_url
-      }
-    })
-    res.status(201).json({message: "file uploaded successfully", file:newFile})
-
+        file_url: cloudinaryResponse.secure_url,
+      },
+    });
+    res.status(201).json({ message: "file uploaded successfully", file: newFile });
   } catch (err) {
     res.status(500).json({
-      message: err.message
-    })
+      message: err.message,
+    });
   }
 }
 
