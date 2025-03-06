@@ -68,20 +68,7 @@ const getFolder = async(req, res) => {
   }
 }
 
-const getFiles = async(req, res) => {
-  try{
-    const folderId = req.params.id
-    const files = await prisma.file.findMany({
-      where:{folder_id : Number(folderId)}
-    })
-    res.json({files})
-  }
-  catch (err) {
-    res.status(500).json({
-      message: "something went wrong"
-    })
-  }
-} 
 
-module.exports = {addFolder, deleteFolder, updateFolderName, getFolder, getFiles}
+
+module.exports = {addFolder, deleteFolder, updateFolderName, getFolder}
 
