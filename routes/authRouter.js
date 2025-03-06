@@ -4,7 +4,7 @@ const passport = require("passport");
 
 const authRouter = Router()
 
-authRouter.post('/login', passport.authenticate('local'),loginUser)
+authRouter.post('/login', loginUser)
 authRouter.post('/signup', signupUser)
 authRouter.post('/logout', logoutUser)
 

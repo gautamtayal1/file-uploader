@@ -13,7 +13,7 @@ passport.use(
       const user = await prisma.user.findUnique({where: {email}})
       if(!user) return done(null, false, {message: "User not found"})
 
-      const isMatch = await bcrypt.compare(password, user.passport)
+      const isMatch = await bcrypt.compare(password, user.password)
       if(!isMatch) return done (null, false, {message: "incorrect password"})
 
       return done(null, user)
