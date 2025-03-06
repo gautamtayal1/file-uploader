@@ -1,4 +1,4 @@
-const uploadOnCloudinary = require('../cloudinary')
+const uploadOnCloudinary = require('../utils/cloudinary')
 const prisma = require('../database/db.config')
 
 

@@ -59,7 +59,7 @@ const updateFolderName = async(req, res) => {
 const getFolder = async(req, res) => {
   try{
     folder = await prisma.folder.findMany({})
-    res.json({folder})
+    res.json(folder)
   }
   catch (err) {
     res.status(500).json({

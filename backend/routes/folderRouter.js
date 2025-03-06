@@ -9,5 +9,4 @@ folderRouter.delete('/delete', ensureAuth, deleteFolder)
 folderRouter.put('/update/:id', ensureAuth, updateFolderName)
 folderRouter.get('/get', ensureAuth, getFolder)
 
-
 module.exports = folderRouter

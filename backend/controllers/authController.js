@@ -18,7 +18,14 @@ const signupUser = async(req, res) => {
     const newUser = await prisma.user.create({
       data: {name, email, password:hashPassword}
     })
-    res.status(200).json({data: newUser, message: "user created successfully"})
+    req.login(newUser, (err) => {
+      if (err) {
+        return next(err)
+      }
+      res.status(200).json({data: newUser, message: "user logged successfully"})
+    })
+
+    
   } catch (error) {
     res.status(500).error("server error")
   }
