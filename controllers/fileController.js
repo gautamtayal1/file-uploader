@@ -1,4 +1,6 @@
+const uploadOnCloudinary = require('../cloudinary')
 const prisma = require('../database/db.config')
+
 
 const getFiles = async(req, res) => {
   try{
@@ -17,14 +19,27 @@ const getFiles = async(req, res) => {
 
 const addFiles = async (req, res) => {
   try{
-    const {name, size, folder_id} = req.body
+    if(!req.file){
+      return res.status(400).json({message: "no file uploaded"})
+    }
+    const {originalname, path, size, mimetype} = req.file
+    const {folder_id} = req.body
+
+    const cloudinaryResponse = await uploadOnCloudinary(path)
+    if(!cloudinaryResponse) {
+      return res.status(500).json({message:"cloudinary upload failed"})
+    }
+
     const newFile = await prisma.file.create({
       data: {
-        name,
-        size,
-        folder_id
+        name: originalname,
+        size: size.toString(),
+        folder_id: parseInt(folder_id),
+        file_url: cloudinaryResponse.secure_url
       }
     })
+    res.status(201).json({message: "file uploaded successfully", file:newFile})
+
   } catch (err) {
     res.status(500).json({
       message: "something went wrong"
@@ -32,4 +47,4 @@ const addFiles = async (req, res) => {
   }
 }
 
-module.exports = {getFiles}
+module.exports = {getFiles, addFiles}

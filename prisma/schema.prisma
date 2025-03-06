@@ -47,4 +47,5 @@ model File {
   uploadTime DateTime @default(now())
   folder_id  Int?
   folder     Folder?  @relation(fields: [folder_id], references: [id], onDelete: Cascade)
+  file_url   String
 }
