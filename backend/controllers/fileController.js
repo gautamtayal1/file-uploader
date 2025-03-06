@@ -22,8 +22,8 @@ const addFiles = async (req, res) => {
     if(!req.file){
       return res.status(400).json({message: "no file uploaded"})
     }
-    const {originalname, path, size, mimetype} = req.file
-    const {folder_id} = req.body
+    const {originalname, path, size} = req.file
+    const {folder_id} = req.file
 
     const cloudinaryResponse = await uploadOnCloudinary(path)
     if(!cloudinaryResponse) {
@@ -42,7 +42,7 @@ const addFiles = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({
-      message: "something went wrong"
+      message: err.message
     })
   }
 }
